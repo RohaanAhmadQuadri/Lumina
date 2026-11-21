@@ -1,0 +1,132 @@
+/* Left Toolbar */
+.lumina-toolbar {
+  display: flex;
+  flex-direction: column;
+  width: var(--toolbar-width);
+  background-color: var(--bg-toolbar);
+  border-right: 1px solid var(--border-subtle);
+  padding: 8px 4px;
+  gap: 4px;
+  align-items: center;
+  z-index: 50;
+}
+
+.lumina-tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.lumina-tool-btn:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-bright);
+}
+
+.lumina-tool-btn.active {
+  background-color: var(--bg-active);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+
+.lumina-tool-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.lumina-tool-shortcut-badge {
+  position: absolute;
+  bottom: 2px;
+  right: 3px;
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+/* Color Swatches on toolbar */
+.lumina-tool-colors {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: auto;
+  padding: 8px 0 4px;
+  position: relative;
+  width: 36px;
+  height: 36px;
+}
+
+.lumina-swatch-primary {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-xs);
+  border: 2px solid #ffffff;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  z-index: 2;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+.lumina-swatch-secondary {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-xs);
+  border: 1px solid #ffffff;
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  z-index: 1;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+/* Tool Options Bar (Horizontal under tabs) */
+.lumina-options-bar {
+  display: flex;
+  align-items: center;
+  height: var(--optionsbar-height);
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0 12px;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.lumina-option-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lumina-option-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.lumina-option-input-num {
+  width: 50px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xs);
+  color: var(--text-bright);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 3px 6px;
+  text-align: right;
+  outline: none;
+}

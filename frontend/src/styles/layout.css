@@ -1,0 +1,86 @@
+.lumina-app {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  font-size: 13px;
+  line-height: 1.4;
+  user-select: none;
+}
+
+.lumina-main-area {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.lumina-workspace-column {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--bg-app);
+}
+
+.lumina-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 20px;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 40px;
+}
+
+.lumina-empty-card {
+  background: var(--bg-panel);
+  border: 1px dashed var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 48px 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-shadow: var(--shadow-md);
+  max-width: 500px;
+  transition: all 0.2s ease;
+}
+
+.lumina-empty-card.drag-over {
+  border-color: var(--accent-primary);
+  background-color: rgba(56, 189, 248, 0.08);
+  box-shadow: 0 0 24px var(--accent-glow);
+}
+
+.lumina-empty-icon {
+  width: 64px;
+  height: 64px;
+  color: var(--accent-primary);
+  opacity: 0.8;
+}
+
+.lumina-empty-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-bright);
+}
+
+.lumina-empty-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  max-width: 340px;
+}
+
+.lumina-empty-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}

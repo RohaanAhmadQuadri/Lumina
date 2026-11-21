@@ -1,0 +1,25 @@
+@import './styles/variables.css';
+@import './styles/layout.css';
+@import './styles/navbar.css';
+@import './styles/toolbar.css';
+@import './styles/workspace.css';
+@import './styles/panels.css';
+@import './styles/controls.css';
+@import './styles/dialogs.css';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  user-select: none;
+  -webkit-user-select: none;
+}

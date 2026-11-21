@@ -1,0 +1,54 @@
+{
+  "name": "lumina",
+  "productName": "LUMINA",
+  "version": "1.0.0",
+  "description": "LUMINA — Advanced Professional Photo Editor",
+  "main": "electron/main.js",
+  "author": {
+    "name": "Lumina Creative",
+    "email": "support@lumina.local"
+  },
+  "scripts": {
+    "frontend:build": "npm --prefix frontend run build",
+    "frontend:start": "npm --prefix frontend start",
+    "electron:start": "electron .",
+    "dist": "npm run frontend:build && electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "^34.5.8",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.lumina.photoeditor",
+    "productName": "LUMINA",
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
+    "files": [
+      "electron/**/*",
+      "frontend/build/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "LUMINA",
+      "artifactName": "Lumina-Setup.${ext}"
+    }
+  }
+}

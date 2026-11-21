@@ -1,0 +1,191 @@
+/* Standard Buttons */
+.lumina-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background-color: var(--bg-hover);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.lumina-btn:hover {
+  background-color: var(--bg-active);
+  border-color: var(--border-active);
+  color: var(--text-bright);
+}
+
+.lumina-btn:active {
+  transform: translateY(1px);
+}
+
+.lumina-btn.primary {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgba(2, 132, 199, 0.4);
+}
+
+.lumina-btn.primary:hover {
+  background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.5);
+}
+
+.lumina-btn.danger {
+  background-color: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+.lumina-btn.danger:hover {
+  background-color: rgba(239, 68, 68, 0.3);
+  border-color: #ef4444;
+  color: #ffffff;
+}
+
+.lumina-btn.icon-only {
+  padding: 6px;
+  width: 28px;
+  height: 28px;
+}
+
+.lumina-btn.small {
+  padding: 3px 8px;
+  font-size: 11px;
+}
+
+/* Inputs & Selects */
+.lumina-input, .lumina-select {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xs);
+  color: var(--text-primary);
+  font-size: 12px;
+  padding: 5px 8px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.lumina-input:focus, .lumina-select:focus {
+  border-color: var(--border-focus);
+  background-color: var(--bg-input-focus);
+}
+
+.lumina-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 24px;
+}
+
+/* Slider Component */
+.lumina-slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.lumina-slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+
+.lumina-slider-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.lumina-slider-value-box {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.lumina-slider-value {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-bright);
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 1px 5px;
+  min-width: 42px;
+  text-align: right;
+  outline: none;
+}
+
+.lumina-slider-value:focus {
+  border-color: var(--border-focus);
+}
+
+.lumina-slider-reset {
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 10px;
+  border: none;
+  background: none;
+  padding: 0 2px;
+  transition: color 0.15s ease;
+}
+
+.lumina-slider-reset:hover {
+  color: var(--accent-primary);
+}
+
+.lumina-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lumina-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: #2b2e37;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.lumina-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: var(--accent-primary);
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  transition: transform 0.1s ease, background-color 0.1s ease;
+}
+
+.lumina-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  background: #60a5fa;
+}
+
+.lumina-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: var(--accent-primary);
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  cursor: pointer;
+}

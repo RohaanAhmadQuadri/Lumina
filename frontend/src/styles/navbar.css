@@ -1,0 +1,212 @@
+.lumina-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--topbar-height);
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0 12px;
+  z-index: 100;
+}
+
+.lumina-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 14px;
+  border-right: 1px solid var(--border-default);
+}
+
+.lumina-brand-logo {
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #00d2b4 0%, #38bdf8 50%, #818cf8 100%);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(56, 189, 248, 0.4);
+}
+
+.lumina-brand-logo svg {
+  width: 16px;
+  height: 16px;
+  color: #ffffff;
+}
+
+.lumina-brand-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--text-bright);
+}
+
+.lumina-brand-badge {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--accent-primary);
+  padding: 1px 5px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+/* Nav Menu */
+.lumina-menu-bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 8px;
+}
+
+.lumina-menu-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.lumina-menu-btn:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-bright);
+}
+
+/* Center Quick Controls */
+.lumina-top-center-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lumina-divider-v {
+  width: 1px;
+  height: 20px;
+  background-color: var(--border-default);
+}
+
+.lumina-zoom-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+}
+
+.lumina-zoom-display {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  min-width: 44px;
+  text-align: center;
+  color: var(--text-bright);
+}
+
+/* Right Nav Controls */
+.lumina-top-right-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Document Tabs Bar */
+.lumina-tabs-bar {
+  display: flex;
+  align-items: center;
+  height: var(--tabs-height);
+  background-color: var(--bg-toolbar);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.lumina-tabs-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.lumina-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 12px;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-xs) var(--radius-xs) 0 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  max-width: 180px;
+}
+
+.lumina-tab:hover {
+  background-color: var(--bg-panel);
+  color: var(--text-primary);
+}
+
+.lumina-tab.active {
+  background-color: var(--bg-panel);
+  border-color: var(--border-subtle);
+  border-bottom-color: var(--bg-panel);
+  color: var(--text-bright);
+  font-weight: 500;
+}
+
+.lumina-tab-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lumina-tab-dirty {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accent-primary);
+}
+
+.lumina-tab-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+}
+
+.lumina-tab-close:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-bright);
+}
+
+.lumina-tab-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-xs);
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+.lumina-tab-add:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-bright);
+}

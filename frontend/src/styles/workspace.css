@@ -1,0 +1,205 @@
+/* Central Canvas Workspace */
+.lumina-workspace {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background-color: #121316;
+  outline: none;
+  cursor: default;
+}
+
+.lumina-workspace.tool-hand {
+  cursor: grab !important;
+}
+
+.lumina-workspace.tool-hand.dragging {
+  cursor: grabbing !important;
+}
+
+.lumina-workspace.tool-zoom {
+  cursor: zoom-in;
+}
+
+.lumina-workspace.tool-eyedropper {
+  cursor: crosshair;
+}
+
+.lumina-workspace.tool-brush, .lumina-workspace.tool-eraser {
+  cursor: crosshair;
+}
+
+.lumina-workspace.tool-crop {
+  cursor: crosshair;
+}
+
+.lumina-workspace.tool-move {
+  cursor: move;
+}
+
+/* Canvas Viewport Transform Stage */
+.lumina-canvas-viewport {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Canvas Container */
+.lumina-canvas-container {
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+  pointer-events: auto;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Checkerboard pattern for transparency */
+.lumina-checkerboard {
+  background-color: #202226;
+  background-image: 
+    linear-gradient(45deg, #18191c 25%, transparent 25%), 
+    linear-gradient(-45deg, #18191c 25%, transparent 25%), 
+    linear-gradient(45deg, transparent 75%, #18191c 75%), 
+    linear-gradient(-45deg, transparent 75%, #18191c 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+}
+
+.lumina-render-canvas {
+  display: block;
+}
+
+/* Photoshop-Style Dynamic Brush Cursor Circle */
+.lumina-brush-cursor-circle {
+  position: fixed;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 1px #000000, inset 0 0 1px #000000;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  display: block;
+}
+
+/* Interactive Crop Overlay */
+.lumina-crop-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+}
+
+.lumina-crop-box {
+  position: absolute;
+  border: 1px solid #ffffff;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65);
+  cursor: move;
+}
+
+.lumina-crop-grid-h1, .lumina-crop-grid-h2,
+.lumina-crop-grid-v1, .lumina-crop-grid-v2 {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.lumina-crop-grid-h1 { top: 33.333%; left: 0; right: 0; height: 1px; }
+.lumina-crop-grid-h2 { top: 66.666%; left: 0; right: 0; height: 1px; }
+.lumina-crop-grid-v1 { left: 33.333%; top: 0; bottom: 0; width: 1px; }
+.lumina-crop-grid-v2 { left: 66.666%; top: 0; bottom: 0; width: 1px; }
+
+.lumina-crop-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #ffffff;
+  border: 1px solid #000000;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  z-index: 10;
+}
+
+.lumina-crop-handle.tl { top: -5px; left: -5px; cursor: nwse-resize; }
+.lumina-crop-handle.tr { top: -5px; right: -5px; cursor: nesw-resize; }
+.lumina-crop-handle.bl { bottom: -5px; left: -5px; cursor: nesw-resize; }
+.lumina-crop-handle.br { bottom: -5px; right: -5px; cursor: nwse-resize; }
+.lumina-crop-handle.tc { top: -5px; left: calc(50% - 5px); cursor: ns-resize; }
+.lumina-crop-handle.bc { bottom: -5px; left: calc(50% - 5px); cursor: ns-resize; }
+.lumina-crop-handle.lc { left: -5px; top: calc(50% - 5px); cursor: ew-resize; }
+.lumina-crop-handle.rc { right: -5px; top: calc(50% - 5px); cursor: ew-resize; }
+
+/* Selection Box / Marching Ants */
+.lumina-selection-box {
+  position: absolute;
+  border: 1px dashed #ffffff;
+  outline: 1px dashed #000000;
+  pointer-events: none;
+  animation: marchingAnts 0.8s linear infinite;
+}
+
+@keyframes marchingAnts {
+  0% { stroke-dashoffset: 0; outline-offset: 0px; }
+  100% { stroke-dashoffset: 8; outline-offset: 0px; }
+}
+
+/* Before / After Split Slider */
+.lumina-split-slider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #ffffff;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+  cursor: ew-resize;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.lumina-split-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 28px;
+  height: 28px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a1a1a;
+  font-size: 11px;
+}
+
+/* Status Bar */
+.lumina-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--statusbar-height);
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border-subtle);
+  padding: 0 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.lumina-status-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.lumina-status-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.lumina-status-value {
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
