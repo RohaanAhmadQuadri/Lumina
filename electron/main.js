@@ -28,6 +28,8 @@ function saveRecentFiles(list) {
   }
 }
 
+const SUPPORTED_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp', '.bmp', '.gif', '.tiff', '.tif'];
+
 function getMimeType(filePath) {
   const ext = path.extname(filePath).toLowerCase();
   switch (ext) {
@@ -36,9 +38,79 @@ function getMimeType(filePath) {
     case '.jpeg': return 'image/jpeg';
     case '.webp': return 'image/webp';
     case '.bmp': return 'image/bmp';
+    case '.gif': return 'image/gif';
+    case '.tiff':
+    case '.tif': return 'image/tiff';
     default: return 'application/octet-stream';
   }
 }
+
+function getFilePathFromArgs(argv) {
+  if (!argv || !Array.isArray(argv)) return null;
+  for (let i = 1; i < argv.length; i++) {
+    let arg = argv[i];
+    if (!arg || typeof arg !== 'string') continue;
+    arg = arg.trim();
+    if ((arg.startsWith('"') && arg.endsWith('"')) || (arg.startsWith("'") && arg.endsWith("'"))) {
+      arg = arg.slice(1, -1);
+    }
+    if (arg.startsWith('--') || arg.startsWith('-') || arg === '.') continue;
+
+    const ext = path.extname(arg).toLowerCase();
+    if (SUPPORTED_EXTENSIONS.includes(ext)) {
+      try {
+        const resolved = path.resolve(arg);
+        if (fs.existsSync(resolved)) {
+          return resolved;
+        }
+      } catch (err) {
+        // continue
+      }
+    }
+  }
+  return null;
+}
+
+function createFilePayload(filePath) {
+  try {
+    const resolved = path.resolve(filePath);
+    if (!fs.existsSync(resolved)) return null;
+
+    const buffer = fs.readFileSync(resolved);
+    const mime = getMimeType(resolved);
+    const dataUrl = `data:${mime};base64,${buffer.toString('base64')}`;
+    const stats = fs.statSync(resolved);
+
+    // Save to recents
+    let recents = loadRecentFiles().filter(item => item.path !== resolved);
+    recents.unshift({
+      path: resolved,
+      name: path.basename(resolved),
+      lastOpened: Date.now()
+    });
+    saveRecentFiles(recents);
+
+    return {
+      filePath: resolved,
+      fileName: path.basename(resolved),
+      dataUrl,
+      size: stats.size
+    };
+  } catch (err) {
+    console.error('Failed to create file payload for:', filePath, err);
+    return null;
+  }
+}
+
+function sendFileToWindow(filePath) {
+  if (!mainWindow || !filePath) return;
+  const payload = createFilePayload(filePath);
+  if (payload) {
+    mainWindow.webContents.send('lumina:open-image-payload', payload);
+  }
+}
+
+let initialFilePath = getFilePathFromArgs(process.argv);
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -47,6 +119,7 @@ function createWindow() {
     minWidth: 1024,
     minHeight: 700,
     backgroundColor: '#18191c',
+    icon: path.join(__dirname, '../assets/icon.ico'),
     title: 'LUMINA — Professional Photo Editor',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -73,6 +146,14 @@ function createWindow() {
     }
   }
 
+  // Fallback: If initialFilePath hasn't been consumed yet by renderer, send it once loaded
+  mainWindow.webContents.on('did-finish-load', () => {
+    if (initialFilePath) {
+      sendFileToWindow(initialFilePath);
+      initialFilePath = null;
+    }
+  });
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -83,10 +164,25 @@ const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();
 } else {
-  app.on('second-instance', () => {
+  app.on('second-instance', (event, commandLine) => {
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore();
       mainWindow.focus();
+
+      const filePath = getFilePathFromArgs(commandLine);
+      if (filePath) {
+        sendFileToWindow(filePath);
+      }
+    }
+  });
+
+  // Cross-platform open-file event
+  app.on('open-file', (event, filePath) => {
+    event.preventDefault();
+    if (mainWindow && mainWindow.webContents) {
+      sendFileToWindow(filePath);
+    } else {
+      initialFilePath = filePath;
     }
   });
 
@@ -108,16 +204,26 @@ app.on('window-all-closed', () => {
 });
 
 // IPC Handlers
+ipcMain.handle('lumina:get-initial-file', async () => {
+  if (!initialFilePath) return null;
+  const filePath = initialFilePath;
+  initialFilePath = null;
+  return createFilePayload(filePath);
+});
+
 ipcMain.handle('lumina:open-file', async () => {
   if (!mainWindow) return { canceled: true };
   const result = await dialog.showOpenDialog(mainWindow, {
     title: 'Open Image — LUMINA',
     properties: ['openFile'],
     filters: [
-      { name: 'Supported Images (*.png, *.jpg, *.jpeg, *.webp)', extensions: ['png', 'jpg', 'jpeg', 'webp', 'bmp'] },
-      { name: 'PNG Image (*.png)', extensions: ['png'] },
+      { name: 'Supported Images (*.jpg, *.jpeg, *.png, *.webp, *.bmp, *.gif, *.tiff, *.tif)', extensions: ['jpg', 'jpeg', 'png', 'webp', 'bmp', 'gif', 'tiff', 'tif'] },
       { name: 'JPEG Image (*.jpg, *.jpeg)', extensions: ['jpg', 'jpeg'] },
+      { name: 'PNG Image (*.png)', extensions: ['png'] },
       { name: 'WebP Image (*.webp)', extensions: ['webp'] },
+      { name: 'Bitmap Image (*.bmp)', extensions: ['bmp'] },
+      { name: 'GIF Image (*.gif)', extensions: ['gif'] },
+      { name: 'TIFF Image (*.tiff, *.tif)', extensions: ['tiff', 'tif'] },
       { name: 'All Files (*.*)', extensions: ['*'] }
     ]
   });

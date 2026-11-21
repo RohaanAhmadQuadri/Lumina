@@ -10,6 +10,14 @@ contextBridge.exposeInMainWorld('luminaAPI', {
   saveImageFile: (filePath, base64Data) => ipcRenderer.invoke('lumina:save-file', { filePath, base64Data }),
   readImageFile: (filePath) => ipcRenderer.invoke('lumina:read-file', filePath),
 
+  // File association / "Open with" bridge
+  getInitialFile: () => ipcRenderer.invoke('lumina:get-initial-file'),
+  onOpenFile: (callback) => {
+    const handler = (event, payload) => callback(payload);
+    ipcRenderer.on('lumina:open-image-payload', handler);
+    return () => ipcRenderer.removeListener('lumina:open-image-payload', handler);
+  },
+
   // Recent files
   getRecentFiles: () => ipcRenderer.invoke('lumina:get-recent'),
   addRecentFile: (filePath) => ipcRenderer.invoke('lumina:add-recent', filePath),

@@ -95,11 +95,6 @@ function App() {
     setActiveDocumentId(newDoc.id);
   }, []);
 
-  // Initialize with a default canvas on startup
-  useEffect(() => {
-    handleCreateDocument({ name: 'Untitled-1', width: 1200, height: 800 });
-  }, [handleCreateDocument]);
-
   // Open image from file data
   const handleOpenImageData = useCallback((fileName, dataUrl, filePath = null) => {
     const img = new Image();
@@ -109,11 +104,57 @@ function App() {
         filePath,
         initialImage: img
       });
-      setDocuments((prev) => [...prev, doc]);
+      setDocuments((prev) => {
+        // If the only document is a clean, unmodified Untitled-1, replace it
+        if (
+          prev.length === 1 &&
+          prev[0].name === 'Untitled-1' &&
+          !prev[0].isDirty &&
+          (!prev[0].history || prev[0].history.undoStack.length <= 1)
+        ) {
+          return [doc];
+        }
+        return [...prev, doc];
+      });
       setActiveDocumentId(doc.id);
     };
     img.src = dataUrl;
   }, []);
+
+  // Initialize: check if opened with a file (Open with / CLI), otherwise create default Untitled-1 canvas
+  useEffect(() => {
+    let isMounted = true;
+    const checkInitialFile = async () => {
+      if (window.luminaAPI && window.luminaAPI.getInitialFile) {
+        try {
+          const initFile = await window.luminaAPI.getInitialFile();
+          if (initFile && initFile.dataUrl && isMounted) {
+            handleOpenImageData(initFile.fileName, initFile.dataUrl, initFile.filePath);
+            return;
+          }
+        } catch (err) {
+          console.error('Failed to get initial file:', err);
+        }
+      }
+      if (isMounted) {
+        handleCreateDocument({ name: 'Untitled-1', width: 1200, height: 800 });
+      }
+    };
+
+    checkInitialFile();
+    return () => { isMounted = false; };
+  }, [handleCreateDocument, handleOpenImageData]);
+
+  // Listen for files opened while the application is already running (Windows "Open with" second instance)
+  useEffect(() => {
+    if (!window.luminaAPI || !window.luminaAPI.onOpenFile) return;
+    const unsubscribe = window.luminaAPI.onOpenFile((payload) => {
+      if (payload && payload.dataUrl) {
+        handleOpenImageData(payload.fileName, payload.dataUrl, payload.filePath);
+      }
+    });
+    return () => unsubscribe && unsubscribe();
+  }, [handleOpenImageData]);
 
   // Open image using Electron native dialog or browser input fallback
   const handleOpenImage = useCallback(async () => {

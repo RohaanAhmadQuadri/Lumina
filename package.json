@@ -12,7 +12,8 @@
     "frontend:build": "npm --prefix frontend run build",
     "frontend:start": "npm --prefix frontend start",
     "electron:start": "electron .",
-    "dist": "npm run frontend:build && electron-builder --win nsis"
+    "dist": "npm run frontend:build && electron-builder --win nsis",
+    "dist:dir": "npm run frontend:build && electron-builder --win --dir"
   },
   "devDependencies": {
     "electron": "^34.5.8",
@@ -31,6 +32,64 @@
       "assets/**/*",
       "package.json"
     ],
+    "fileAssociations": [
+      {
+        "ext": "jpg",
+        "name": "JPEG Image",
+        "description": "JPEG Image File",
+        "icon": "assets/icon.ico",
+        "role": "Editor"
+      },
+      {
+        "ext": "jpeg",
+        "name": "JPEG Image",
+        "description": "JPEG Image File",
+        "icon": "assets/icon.ico",
+        "role": "Editor"
+      },
+      {
+        "ext": "png",
+        "name": "PNG Image",
+        "description": "PNG Image File",
+        "icon": "assets/icon.ico",
+        "role": "Editor"
+      },
+      {
+        "ext": "webp",
+        "name": "WebP Image",
+        "description": "WebP Image File",
+        "icon": "assets/icon.ico",
+        "role": "Editor"
+      },
+      {
+        "ext": "bmp",
+        "name": "Bitmap Image",
+        "description": "Bitmap Image File",
+        "icon": "assets/icon.ico",
+        "role": "Editor"
+      },
+      {
+        "ext": "gif",
+        "name": "GIF Image",
+        "description": "GIF Image File",
+        "icon": "assets/icon.ico",
+        "role": "Editor"
+      },
+      {
+        "ext": "tiff",
+        "name": "TIFF Image",
+        "description": "TIFF Image File",
+        "icon": "assets/icon.ico",
+        "role": "Editor"
+      },
+      {
+        "ext": "tif",
+        "name": "TIFF Image",
+        "description": "TIFF Image File",
+        "icon": "assets/icon.ico",
+        "role": "Editor"
+      }
+    ],
     "win": {
       "target": [
         {
@@ -45,10 +104,12 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
+      "createDesktopShortcut": "always",
       "createStartMenuShortcut": true,
       "shortcutName": "LUMINA",
-      "artifactName": "Lumina-Setup.${ext}"
+      "artifactName": "Lumina-Setup.${ext}",
+      "uninstallDisplayName": "LUMINA Photo Editor",
+      "include": "electron/installer.nsh"
     }
   }
 }
