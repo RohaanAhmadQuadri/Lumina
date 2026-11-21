@@ -4,10 +4,14 @@
 [![Framework](https://img.shields.io/badge/Framework-Electron.js%2034-47848F.svg?logo=electron)](https://electronjs.org)
 [![Frontend](https://img.shields.io/badge/Frontend-React.js%2019-61DAFB.svg?logo=react)](https://react.dev)
 [![Engine](https://img.shields.io/badge/Rendering-HTML5%20Canvas%20API-E34F26.svg?logo=html5)](https://w3.org)
-[![Installer](https://img.shields.io/badge/Installer-Lumina--Setup.exe-00c896.svg)]()
+[![Installer](https://img.shields.io/badge/Download-Lumina--Setup.exe%20(v1.0.0)-00c896.svg?logo=windows)](https://github.com/RohaanAhmadQuadri/Lumina/releases/download/v1.0.0/Lumina-Setup.exe)
+[![Release](https://img.shields.io/badge/Release-v1.0.0-blue.svg)](https://github.com/RohaanAhmadQuadri/Lumina/releases/tag/v1.0.0)
 [![Documentation](https://img.shields.io/badge/Documentation-Complete%20Guide-blueviolet.svg)](DOCUMENTATION.md)
 
 **LUMINA** is a high-performance, professional desktop photo editing application engineered from the ground up for Windows. Inspired by creative suites like Adobe Photoshop and Lightroom, LUMINA pairs a dark theme interface with a pure HTML5 Canvas image manipulation engine, multi-layer compositing, non-destructive color grading, and native Windows desktop integration.
+
+### 📥 [Download Lumina v1.0.0 for Windows (Lumina-Setup.exe)](https://github.com/RohaanAhmadQuadri/Lumina/releases/download/v1.0.0/Lumina-Setup.exe)
+*Ready-to-run Windows installer (~79 MB). No Node.js or development setup required.*
 
 ---
 
