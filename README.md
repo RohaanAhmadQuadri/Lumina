@@ -67,7 +67,13 @@ Non-destructive, real-time pixel processing with numeric inputs, fine-nudge slid
 - Visual **History Panel** tracking every stroke, adjustment, layer creation, and transformation.
 - Direct jump to any historical state.
 
-### 7. Professional Export System
+### 7. Native Windows Integration
+- **Standalone Installer & Executable**: Self-contained installation via `Lumina-Setup.exe` with desktop shortcut and Start Menu entry. Zero prerequisite runtime installation required.
+- **Windows "Open with" Association**: Registered as a recognized image editor for `.jpg`, `.jpeg`, `.png`, `.webp`, `.bmp`, `.gif`, `.tiff`, and `.tif`.
+- **Single-Instance Image Routing**: Opening images while LUMINA is already running automatically routes the image into a new tab in the active window without spawning duplicate processes.
+- **Portable Explorer Scripts**: Includes one-click scripts (`register_open_with.bat` and `unregister_open_with.bat`) for portable setups.
+
+### 8. Professional Export System
 - Export formats: **PNG** (lossless with full alpha transparency), **JPEG** (custom quality compression 1–100%), and **WebP** (modern high-compression web format).
 - Live export file size estimation.
 - Native Windows File Save Dialog via secure Electron IPC bridge.
@@ -80,10 +86,12 @@ LUMINA follows a clean three-tier decoupled architecture:
 
 ```
 LUMINA/
+├── assets/                   # Application icon (.ico, .png)
 ├── electron/                 # Electron Desktop Layer
-│   ├── main.js               # Window lifecycle, secure IPC, native file dialogs
-│   ├── preload.js            # Secure contextBridge exposing window.luminaAPI
-│   └── menu.js               # Native Windows application menu & accelerators
+│   ├── installer.nsh         # NSIS Windows registry & shell integration hooks
+│   ├── main.js               # Window lifecycle, secure IPC, CLI argument parsing
+│   ├── menu.js               # Native Windows application menu & accelerators
+│   └── preload.js            # Secure contextBridge exposing window.luminaAPI
 │
 ├── frontend/                 # React UI & Image Processing Engine
 │   ├── src/
@@ -106,12 +114,15 @@ LUMINA/
 │   │   │   ├── dialogs/      # NewDocument, Resize, CanvasSize, Export, Shortcuts, About
 │   │   │   └── common/       # Crisp SVG Icons, SliderControl, Modal
 │   │   ├── styles/           # Pure CSS3 Styling & Photoshop-inspired Dark Theme
-│   │   ├── App.js            # Main Application Root
+│   │   ├── App.js            # Main Application Root & Image Load Dispatcher
 │   │   └── index.js
 │   └── package.json
 │
-├── assets/                   # Application icon (.ico, .png)
-├── package.json              # Electron packaging configuration
+├── scripts/                  # Portable Windows utilities
+│   ├── register_open_with.bat    # Register portable build with Windows Open with
+│   └── unregister_open_with.bat  # Cleanly unregister portable Open with associations
+├── DOCUMENTATION.md          # Comprehensive architecture & engine documentation
+├── package.json              # Electron packaging & file associations configuration
 └── README.md
 ```
 
@@ -162,7 +173,7 @@ LUMINA/
 
 ## Building and Packaging
 
-### Development
+### Development Workflow
 ```powershell
 # 1. Build React frontend
 npm run frontend:build
@@ -171,11 +182,18 @@ npm run frontend:build
 npm run electron:start
 ```
 
-### Windows Installer Generation
+### Windows Standalone Installer & Executable
 ```powershell
-# Produces standalone Lumina-Setup.exe in dist/
+# Produces standalone Lumina-Setup.exe and portable win-unpacked/ in dist/
 npm run dist
 ```
+- **Installer**: `dist/Lumina-Setup.exe` (NSIS installer with Desktop and Start Menu shortcut creation)
+- **Portable App**: `dist/win-unpacked/LUMINA.exe` (Can be launched directly without installation)
+
+### Windows "Open with" Integration
+LUMINA registers as an editor for `.jpg`, `.jpeg`, `.png`, `.webp`, `.bmp`, `.gif`, `.tiff`, and `.tif`.
+- **Installed App**: Registered automatically via NSIS installer macros during setup and cleanly removed on uninstall.
+- **Portable App**: Run `scripts/register_open_with.bat` to integrate the portable executable with Windows Explorer, or `scripts/unregister_open_with.bat` to remove it.
 
 ---
 

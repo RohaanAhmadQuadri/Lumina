@@ -440,10 +440,11 @@ When the user presses <kbd>Delete</kbd> or <kbd>Backspace</kbd>, `SelectionEngin
 
 ## 4. Desktop Integration & Electron Layer
 
-### 4.1 Window Lifecycle & Native IPC (`main.js`)
-- Enforces a **Single Instance Lock** (`app.requestSingleInstanceLock()`). If the user launches a second executable, focus is restored to the primary window.
-- Manages native OS file dialogs for opening images and saving exports.
-- Maintains a persistent `lumina_recent_files.json` in the user's `AppData` directory.
+### 4.1 Window Lifecycle, Single Instance & Image Routing (`main.js`)
+- **Single Instance Lock & Second Instance Routing**: Enforces `app.requestSingleInstanceLock()`. When a user opens an image via Windows "Open with" while LUMINA is already active, `app.on('second-instance')` extracts the CLI image arguments, resolves the absolute path, packages a base64 payload, and emits `lumina:open-image-payload` to the active window without opening duplicate application instances.
+- **Cold-Start CLI Image Opening**: If LUMINA is launched fresh from Windows Explorer by double-clicking or right-clicking an associated image, `process.argv` is inspected for valid image paths. The renderer accesses the image payload via `lumina:get-initial-file`, loading the target image directly and avoiding the default blank "Untitled-1" document.
+- **Native OS File Dialogs**: Handles multi-extension open dialogs and custom-format save dialogs with native Windows filters (`.png`, `.jpg`, `.jpeg`, `.webp`, `.bmp`, `.gif`, `.tiff`, `.tif`).
+- **Recent Files Persistence**: Maintains `lumina_recent_files.json` in `AppData\Roaming\lumina` for instant access to previous sessions.
 
 ### 4.2 Secure Context Bridge (`preload.js`)
 LUMINA adheres strictly to Electron security practices. The renderer has zero direct access to Node.js APIs (`fs`, `child_process`, `electron`).
@@ -452,12 +453,31 @@ LUMINA adheres strictly to Electron security practices. The renderer has zero di
 contextBridge.exposeInMainWorld('luminaAPI', {
   isElectron: true,
   platform: process.platform,
+
+  // File dialogs & I/O
   openFileDialog: () => ipcRenderer.invoke('lumina:open-file'),
   saveFileDialog: (options) => ipcRenderer.invoke('lumina:show-save-dialog', options),
   saveImageFile: (filePath, base64Data) => ipcRenderer.invoke('lumina:save-file', { filePath, base64Data }),
   readImageFile: (filePath) => ipcRenderer.invoke('lumina:read-file', filePath),
+
+  // File association & Windows "Open with" bridge
+  getInitialFile: () => ipcRenderer.invoke('lumina:get-initial-file'),
+  onOpenFile: (callback) => {
+    const handler = (event, payload) => callback(payload);
+    ipcRenderer.on('lumina:open-image-payload', handler);
+    return () => ipcRenderer.removeListener('lumina:open-image-payload', handler);
+  },
+
+  // Recent files
   getRecentFiles: () => ipcRenderer.invoke('lumina:get-recent'),
+  addRecentFile: (filePath) => ipcRenderer.invoke('lumina:add-recent', filePath),
+  clearRecentFiles: () => ipcRenderer.invoke('lumina:clear-recent'),
+
+  // Window title & dialogs
+  showMessageBox: (options) => ipcRenderer.invoke('lumina:show-message-box', options),
   setDocumentTitle: (title) => ipcRenderer.invoke('lumina:set-title', title),
+
+  // Native Menu IPC bridge
   onMenuAction: (callback) => {
     const handler = (event, action, payload) => callback(action, payload);
     ipcRenderer.on('lumina:menu-action', handler);
@@ -466,7 +486,13 @@ contextBridge.exposeInMainWorld('luminaAPI', {
 });
 ```
 
-### 4.3 Native Application Menu & Accelerators (`menu.js`)
+### 4.3 Windows Shell File Associations & NSIS Hooks (`installer.nsh`)
+- Registers `LUMINA.exe` under Windows Registry `HKCR\Applications\LUMINA.exe` and `HKCU\Software\Classes\Applications\LUMINA.exe`.
+- Adds `SupportedTypes` and `OpenWithProgids` mappings for all supported image formats (`.jpg`, `.jpeg`, `.png`, `.webp`, `.bmp`, `.gif`, `.tiff`, `.tif`).
+- Configures `role: "Editor"` so LUMINA appears gracefully in Windows **Open with** menus without forcibly altering the user's default system image viewer.
+- Triggers `Shell32::SHChangeNotify(0x08000000, ...)` upon installation and uninstallation to immediately refresh the Windows Explorer shell cache.
+
+### 4.4 Native Application Menu & Accelerators (`menu.js`)
 Builds a native Windows application menu bar with categories:
 - **File**: New, Open Image, Open Recent, Save, Export As, Close Document, Exit.
 - **Edit**: Undo, Redo, Select All, Deselect, Delete Selection.
@@ -575,14 +601,20 @@ npm run frontend:build
 This builds static JavaScript, CSS, and HTML into `frontend/build/`.
 
 ### 7.3 Standalone Executable & NSIS Installer
-LUMINA uses **electron-builder** to generate standalone desktop distributions:
+LUMINA uses **electron-builder** with NSIS to generate standalone desktop distributions:
 ```powershell
 # Build web assets and package standalone Windows distribution:
 npm run dist
 ```
 This produces:
-- `dist/LUMINA Setup 1.0.0.exe`: Standalone Windows NSIS installer with desktop and Start Menu shortcut creation.
+- `dist/Lumina-Setup.exe`: Standalone self-contained Windows NSIS installer (~82.8 MB) with:
+  - Custom application name (**LUMINA**) and high-resolution icon.
+  - Automatic Start Menu shortcut and Desktop shortcut creation.
+  - Registry integration for Windows "Open with" across all 8 supported image formats without hijacking system default viewers.
+  - Clean uninstaller registered in Windows Settings / Control Panel.
 - `dist/win-unpacked/LUMINA.exe`: Portable, standalone executable ready for instant deployment without installation.
+- `scripts/register_open_with.bat`: Batch script to register the portable executable with Windows Explorer Open with menu.
+- `scripts/unregister_open_with.bat`: Batch script to safely unregister portable Explorer file associations.
 
 ---
 
